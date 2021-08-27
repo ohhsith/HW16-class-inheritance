@@ -1,56 +1,54 @@
-
 class Clock {
-    
     constructor(timer) {
-        this.time = document.querySelector(timer);
+        this.time = timer;
     }
-    
-    switchTimeFormat () {
-        this.time.addEventListener('click', () =>{
-            this.showFullTime = !this.showFullTime;
-        });
+    render() { 
+        let now = new Date();
+        let hours = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
+        let minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
+        let seconds = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds(); 
+        let milliseconds = now.getMilliseconds()< 100 ? '0' + now.getMilliseconds() : now.getMilliseconds();
+        this.time.innerHTML = `${hours}:${minutes}:${seconds}:${milliseconds}`;
     }
 }
 
 class ShowMeFullTime extends Clock{
-    constructor(timer) {
-        super(timer)
-        this.showFullTime = true;
-    }
     render() { 
-        this.now = new Date();
-        this.hours = this.now.getHours() < 10 ? '0' + this.now.getHours() : this.now.getHours();
-        this.minutes = this.now.getMinutes() < 10 ? '0' + this.now.getMinutes() : this.now.getMinutes();
-        this.seconds = this.now.getSeconds() < 10 ? '0' + this.now.getSeconds() : this.now.getSeconds(); 
-        this.time.innerHTML = this.showFullTime ? `${this.hours}:${this.minutes}:${this.seconds}`: `${this.hours}:${this.minutes}`;
-       
+        let now = new Date();
+        let hours = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
+        let minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
+        let seconds = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds(); 
+        this.time.innerHTML = `${hours}:${minutes}:${seconds}`;
     }
     
 }
 class ShowMeShortTime extends Clock{
-    constructor(timer) {
-        super(timer)
-        this.showFullTime = !true;
-    }
     render() { 
-        this.now = new Date();
-        this.hours = this.now.getHours() < 10 ? '0' + this.now.getHours() : this.now.getHours();
-        this.minutes = this.now.getMinutes() < 10 ? '0' + this.now.getMinutes() : this.now.getMinutes();
-        this.seconds = this.now.getSeconds() < 10 ? '0' + this.now.getSeconds() : this.now.getSeconds(); 
-        this.time.innerHTML = !this.showFullTime ? `${this.hours}:${this.minutes}`: `${this.hours}:${this.minutes}:${this.seconds}`;
-       
+        let now = new Date();
+        let hours = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
+        let minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
+        this.time.innerHTML = `${hours}:${minutes}`;
     }
 }
-      
-let clockFull = new ShowMeFullTime('.full-time');
-setInterval(() =>
-    clockFull.render()
-, 100);
-clockFull.switchTimeFormat()
+// находим в доме таймер, присваем переменной
+let timer = document.querySelector('.time')
 
-let clockShort = new ShowMeShortTime('.short-time');
-setInterval(() =>
-    clockShort.render()
-, 100);
+let clockFull = new ShowMeFullTime(timer);
 
-clockShort.switchTimeFormat()
+let clockShort = new ShowMeShortTime(timer);
+
+// готовим базу для тоггла
+let isFullTimeFormat = true;
+// тоггл
+timer.addEventListener('click', function() {
+    isFullTimeFormat = !isFullTimeFormat;
+});
+
+setInterval(()=>{
+    if(isFullTimeFormat){
+        clockFull.render()
+    } else {
+        clockShort.render()
+    } 100
+}, 100)
+
